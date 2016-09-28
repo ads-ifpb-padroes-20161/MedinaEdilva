@@ -25,7 +25,7 @@
         </div>
         <div class="container" style="width:60%">
             <div class="row">
-                <form method="post" id="cadastroFuncionario" action="Controller?command=CadastrarFuncionario" name="formFuncionario">
+                <form method="post" id="cadastroFuncionario" action="Controller?command=CadastrarAtendente" name="formFuncionario">
                     <div class="form-group col-md-8">
                         <label for="nome">Nome: </label>
                         <input type="text" class="form-control" name="nome" id="nome" autofocus required>
@@ -96,7 +96,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="numero">Número: </label>
-                        <input type="text" class="form-control" name="numero" id="numero" min="1" required>
+                        <input type="text" class="form-control" name="numero" id="numero" required>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="matricula">Matrícula: </label>

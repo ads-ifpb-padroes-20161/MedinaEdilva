@@ -20,8 +20,6 @@ public class Funcionario extends Pessoa{
         this.cnpjClinica = cnpjClinica;
     }
 
-    
-
     public Funcionario() {
         
     }
@@ -52,6 +50,7 @@ public class Funcionario extends Pessoa{
 
     @Override
     public String toString() {
-        return "Funcionario{" + "matricula=" + matricula + ", senha=" + senha + ", cnpjClinica=" + cnpjClinica + '}';
+        return "Funcionario{" + super.toString() + "matricula=" + matricula + ", senha=" + senha + ", cnpjClinica=" + cnpjClinica + '}';
     }
+
 }

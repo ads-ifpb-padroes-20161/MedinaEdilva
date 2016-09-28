@@ -15,3 +15,8 @@ $(function () {
         $(this).parent('div').remove();
     });
 });
+
+jQuery(function ($) {
+    $("#hora").mask("99:99");
+    $("#cnpj").mask("99.999.999/999-99");
+});

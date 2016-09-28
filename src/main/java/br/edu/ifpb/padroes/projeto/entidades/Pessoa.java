@@ -16,7 +16,6 @@ public class Pessoa implements Comparable<Pessoa>{
     private LocalDate dataNasc;
     private String email;
     private Endereco endereco;
-    private TipoPessoa tipo;
     private List<String> telefones;
 
     public Pessoa(String cpf, String nome, String rg, LocalDate dataNasc, String email, Endereco endereco, List<String> telefones) {
@@ -79,14 +78,6 @@ public class Pessoa implements Comparable<Pessoa>{
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
-
-    public TipoPessoa getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoPessoa tipo) {
-        this.tipo = tipo;
-    }
     
     public List<String> getTelefones(){
         return telefones;
@@ -136,7 +127,7 @@ public class Pessoa implements Comparable<Pessoa>{
 
     @Override
     public String toString() {
-        return "Pessoa{" + "cpf=" + cpf + ", nome=" + nome + ", rg=" + rg + ", dataNasc=" + dataNasc + ", email=" + email + ", endereco=" + endereco + ", tipo=" + tipo + ", telefones=" + telefones + '}';
+        return "Pessoa{" + "cpf=" + cpf + ", nome=" + nome + ", rg=" + rg + ", dataNasc=" + dataNasc + ", email=" + email + ", endereco=" + endereco + ", telefones=" + telefones + '}';
     }
 
 }

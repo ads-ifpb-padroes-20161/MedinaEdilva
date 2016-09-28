@@ -5,8 +5,6 @@ import br.edu.ifpb.padroes.projeto.conexao.ConexaoIF;
 import br.edu.ifpb.padroes.projeto.conexao.DataBaseException;
 import br.edu.ifpb.padroes.projeto.entidades.Endereco;
 import br.edu.ifpb.padroes.projeto.entidades.Funcionario;
-import br.edu.ifpb.padroes.projeto.entidades.TipoPessoa;
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,33 +35,27 @@ public class FuncionarioDao implements FuncionarioDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "INSERT INTO PESSOA (CPF, NOME, RG, DATA_NASC, EMAIL, TIPO, "
-                    + "UF, CIDADE, BAIRRO, RUA, NUMERO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO FUNCIONARIO (CPF, NOME, RG, DATA_NASC, EMAIL, "
+                    + "UF, CIDADE, BAIRRO, RUA, NUMERO, MATRICULA, SENHA, CNPJ_CLINICA) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, funcionario.getCpf());
             ps.setString(2, funcionario.getNome());
             ps.setString(3, funcionario.getRg());
             ps.setDate(4, Date.valueOf(funcionario.getDataNasc()));
             ps.setString(5, funcionario.getEmail());
-            ps.setString(6, String.valueOf(TipoPessoa.ATENDENTE));
-            ps.setString(7, funcionario.getEndereco().getEstado());
-            ps.setString(8, funcionario.getEndereco().getCidade());
-            ps.setString(9, funcionario.getEndereco().getBairro());
-            ps.setString(10, funcionario.getEndereco().getRua());
-            ps.setString(11, funcionario.getEndereco().getNumero());
+            ps.setString(6, funcionario.getEndereco().getEstado());
+            ps.setString(7, funcionario.getEndereco().getCidade());
+            ps.setString(8, funcionario.getEndereco().getBairro());
+            ps.setString(9, funcionario.getEndereco().getRua());
+            ps.setString(10, funcionario.getEndereco().getNumero());
+            ps.setString(11, funcionario.getMatricula());
+            ps.setString(12, funcionario.getSenha());
+            ps.setString(13, funcionario.getCnpjClinica());
 
             if (ps.executeUpdate() > 0) {
-                String sql2 = "INSERT INTO FUNCIONARIO (CPF_FUNCIONARIO, MATRICULA, SENHA, CNPJ_CLINICA) VALUES (?, ?, ?, ?)";
-                ps = conn.getConnection().prepareStatement(sql2);
-                ps.setString(1, funcionario.getCpf());
-                ps.setString(2, funcionario.getMatricula());
-                ps.setString(3, funcionario.getSenha());
-                ps.setString(4, funcionario.getCnpjClinica());
-                
-                if (ps.executeUpdate() > 0) {
-                    adicionaTelefone(funcionario, ps);
-                    result = true;
-                }
+                adicionaTelefone(funcionario, ps);
+                result = true;
             }
 
         } catch (SQLException | ClassNotFoundException ex) {
@@ -78,18 +70,18 @@ public class FuncionarioDao implements FuncionarioDaoIF {
 
         return result;
     }
-    
+
     private void adicionaTelefone(Funcionario funcionario, PreparedStatement ps) {
 
         try {
-            String sql2 = "INSERT INTO TELEFONE_PESSOA (CPF_PESSOA, TELEFONE) VALUES (?, ?)";
+            String sql2 = "INSERT INTO TELEFONE_FUNCIONARIO (CPF_FUNCIONARIO, TELEFONE) VALUES (?, ?)";
             ps = conn.getConnection().prepareStatement(sql2);
             for (String tel : funcionario.getTelefones()) {
                 ps.setString(1, funcionario.getCpf());
                 ps.setString(2, tel);
                 ps.executeUpdate();
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(ClinicaDao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -108,7 +100,7 @@ public class FuncionarioDao implements FuncionarioDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "DELETE FROM FUNCIONARIO WHERE CPF_FUNCIONARIO = ?";
+            String sql = "DELETE FROM FUNCIONARIO WHERE CPF = ?";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, cpf);
 
@@ -135,11 +127,13 @@ public class FuncionarioDao implements FuncionarioDaoIF {
         PreparedStatement ps = null;
         try {
             conn = new Conexao();
-            String sql = "SELECT * FROM (FUNCIONARIO F JOIN PESSOA P ON F.CPF_FUNCIONARIO=P.CPF) WHERE P.CPF = ?";
+            String sql = "SELECT * FROM FUNCIONARIO WHERE CPF = ?";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
-            funcionario = dadosDoFuncionario(rs);
+            if (rs.next()) {
+                funcionario = dadosDoFuncionario(rs);
+            }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(FuncionarioDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -147,7 +141,7 @@ public class FuncionarioDao implements FuncionarioDaoIF {
                 conn.desconecta(ps);
             } catch (DataBaseException ex) {
                 Logger.getLogger(FuncionarioDao.class.getName()).log(Level.SEVERE, null, ex);
-            } 
+            }
         }
         return funcionario;
     }
@@ -159,7 +153,7 @@ public class FuncionarioDao implements FuncionarioDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "SELECT * FROM (FUNCIONARIO F JOIN PESSOA P ON F.CPF_FUNCIONARIO=P.CPF) WHERE TIPO = 'ATENDENTE'";
+            String sql = "SELECT * FROM FUNCIONARIO";
             ps = conn.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -183,11 +177,11 @@ public class FuncionarioDao implements FuncionarioDaoIF {
     public Funcionario login(String matricula, String senha) {
         PreparedStatement ps = null;
         Funcionario funcionario = null;
-        
+
         try {
             conn = new Conexao();
-            
-            String sql = "SELECT * FROM (FUNCIONARIO F JOIN PESSOA P ON F.CPF_FUNCIONARIO=P.CPF) WHERE MATRICULA = ? AND SENHA = ?";
+
+            String sql = "SELECT * FROM FUNCIONARIO WHERE MATRICULA = ? AND SENHA = ?";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, matricula);
             ps.setString(2, senha);
@@ -195,7 +189,6 @@ public class FuncionarioDao implements FuncionarioDaoIF {
             if (rs.next()) {
                 funcionario = dadosDoFuncionario(rs);
             }
-            ps.close();
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(FuncionarioDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -205,7 +198,7 @@ public class FuncionarioDao implements FuncionarioDaoIF {
                 Logger.getLogger(FuncionarioDao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
         return funcionario;
     }
 
@@ -227,25 +220,25 @@ public class FuncionarioDao implements FuncionarioDaoIF {
         Endereco endereco = new Endereco(estado, cidade, bairro, rua, numero);
         List<String> telefones = telefonesDoFuncionario(cpf);
         Funcionario funcionario = new Funcionario(matricula, senha, cnpjClinica, cpf, nome, rg, dataNasc, email, endereco, telefones);
-        
+
         return funcionario;
     }
-    
-    private List<String> telefonesDoFuncionario(String cpf){
+
+    private List<String> telefonesDoFuncionario(String cpf) {
         PreparedStatement ps = null;
         List<String> telefones = new ArrayList<>();
-        
+
         try {
             conn = new Conexao();
-            String sql = "SELECT * FROM TELEFONE_PESSOA WHERE CPF_PESSOA = ?";
+            String sql = "SELECT * FROM TELEFONE_FUNCIONARIO WHERE CPF_FUNCIONARIO = ?";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
-   
+
             while (rs.next()) {
                 telefones.add(rs.getString("TELEFONE"));
             }
-            
+
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(FuncionarioDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -255,7 +248,7 @@ public class FuncionarioDao implements FuncionarioDaoIF {
                 Logger.getLogger(FuncionarioDao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-           
+
         return telefones;
     }
 

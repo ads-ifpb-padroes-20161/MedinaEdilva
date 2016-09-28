@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<jsp:useBean id="lista" class="br.edu.ifpb.padroes.projeto.modelo.ListarAtendentesBo"/>
+<jsp:useBean id="listaAtendente" class="br.edu.ifpb.padroes.projeto.modelo.ListarBo" scope="page"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -34,13 +34,10 @@
                                 <td>RG</td>
                                 <td>DATA DE NASC</td>
                                 <td>EMAIL</td>
-                                <td>UF</td>
-                                <td>CIDADE</td>
-                                <td>BAIRRO</td>
-                                <td>RUA</td>
-                                <td>NÚMERO</td>
+                                <td>DETALHAR</td>
+                                <td>REMOVER</td>
                             </tr>
-                        <c:forEach var="atendente" items="${lista.listar()}">
+                            <c:forEach var="atendente" items="${listaAtendente.listarAtendente()}">
                             <tr class="row">
                                 <td>${atendente.cpf}</td>
                                 <td>${atendente.matricula}</td>
@@ -48,13 +45,11 @@
                                 <td>${atendente.rg}</td>
                                 <td>${atendente.dataNasc}</td>
                                 <td>${atendente.email}</td>
-                                <td>${atendente.endereco.estado}</td>
-                                <td>${atendente.endereco.cidade}</td>
-                                <td>${atendente.endereco.bairro}</td>
-                                <td>${atendente.endereco.rua}</td>
-                                <td>${atendente.endereco.numero}</td>
                                 <td>
-                                    <a href="Controller?command=RemoverAtendente&cpf=${atendente.cpf}">Remover</a>
+                                    <a class="btn btn-primary btn-block" href="Controller?command=ExibirAtendente&cpf=${atendente.cpf}">Detalhar</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger btn-block" href="Controller?command=RemoverAtendente&cpf=${atendente.cpf}">Remover</a>
                                 </td>
                             </tr>
                         </c:forEach>

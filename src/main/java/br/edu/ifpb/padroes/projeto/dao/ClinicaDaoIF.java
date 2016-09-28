@@ -16,5 +16,7 @@ public interface ClinicaDaoIF {
 
     public boolean remover(String cnpj);
     
+    public Clinica exibir(String cnpj);
+    
     public List<Clinica> listarClinica();
 }

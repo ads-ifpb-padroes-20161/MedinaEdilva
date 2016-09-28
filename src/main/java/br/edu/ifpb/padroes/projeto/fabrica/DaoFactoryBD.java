@@ -3,6 +3,8 @@ package br.edu.ifpb.padroes.projeto.fabrica;
 
 import br.edu.ifpb.padroes.projeto.dao.ClinicaDao;
 import br.edu.ifpb.padroes.projeto.dao.ClinicaDaoIF;
+import br.edu.ifpb.padroes.projeto.dao.ConsultaDao;
+import br.edu.ifpb.padroes.projeto.dao.ConsultaDaoIF;
 import br.edu.ifpb.padroes.projeto.dao.FuncionarioDao;
 import br.edu.ifpb.padroes.projeto.dao.FuncionarioDaoIF;
 import br.edu.ifpb.padroes.projeto.dao.MedicoDao;
@@ -34,6 +36,11 @@ public class DaoFactoryBD implements DaoFactoryIF{
     @Override
     public ClinicaDaoIF criaClinica() {
         return new ClinicaDao();
+    }
+
+    @Override
+    public ConsultaDaoIF criaConsulta() {
+        return new ConsultaDao();
     }
     
 }

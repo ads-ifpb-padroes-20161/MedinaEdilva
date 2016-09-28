@@ -3,7 +3,8 @@ package br.edu.ifpb.padroes.projeto.commands;
 
 import br.edu.ifpb.padroes.projeto.entidades.Endereco;
 import br.edu.ifpb.padroes.projeto.entidades.Pessoa;
-import br.edu.ifpb.padroes.projeto.modelo.CadastrarPacienteBo;
+import br.edu.ifpb.padroes.projeto.entidades.TipoPessoa;
+import br.edu.ifpb.padroes.projeto.modelo.CadastrarBo;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -24,14 +24,10 @@ public class CadastrarPaciente implements Command{
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=UTF-8");
-        HttpSession sessao = request.getSession();
         Pessoa paciente = dadosDoPaciente(request);
-        CadastrarPacienteBo cadastro = new CadastrarPacienteBo();
-        cadastro.cadastrar(paciente);
+        CadastrarBo cadastro = new CadastrarBo();
         request.setAttribute("pagina", "cadastroPaciente.jsp");
-        if (paciente == null) {
-            sessao.invalidate();
+        if (!cadastro.cadastrarPaciente(paciente)) {
             try {
                 request.setAttribute("mensagem", "Erro ao cadastrar paciente!");
                 request.getRequestDispatcher("paginaDeResposta.jsp").forward(request, response);
@@ -39,7 +35,6 @@ public class CadastrarPaciente implements Command{
                 Logger.getLogger(CadastrarPaciente.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            sessao.setAttribute("paciente", paciente);
             try {
                 request.setAttribute("mensagem", "Paciente cadastrado com sucesso!");
                 request.getRequestDispatcher("paginaDeResposta.jsp").forward(request, response);

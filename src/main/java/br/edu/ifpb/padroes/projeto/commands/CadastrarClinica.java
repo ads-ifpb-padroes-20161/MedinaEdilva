@@ -3,7 +3,7 @@ package br.edu.ifpb.padroes.projeto.commands;
 
 import br.edu.ifpb.padroes.projeto.entidades.Clinica;
 import br.edu.ifpb.padroes.projeto.entidades.Endereco;
-import br.edu.ifpb.padroes.projeto.modelo.CadastrarClinicaBo;
+import br.edu.ifpb.padroes.projeto.modelo.CadastrarBo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -23,14 +22,10 @@ public class CadastrarClinica implements Command{
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=UTF-8");
-        HttpSession sessao = request.getSession();
         Clinica clinica = dadosDaClinica(request);
-        CadastrarClinicaBo cadastro = new CadastrarClinicaBo();
-        cadastro.cadastrar(clinica);
+        CadastrarBo cadastro = new CadastrarBo();
         request.setAttribute("pagina", "cadastroClinica.jsp");
-        if (clinica == null) {
-            sessao.invalidate();
+        if (!cadastro.cadastrarClinica(clinica)) {
             try {
                 request.setAttribute("mensagem", "Erro ao cadastrar clinica!");
                 request.getRequestDispatcher("paginaDeResposta.jsp").forward(request, response);
@@ -38,7 +33,6 @@ public class CadastrarClinica implements Command{
                 Logger.getLogger(CadastrarClinica.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            sessao.setAttribute("clinica", clinica);
             try {
                 request.setAttribute("mensagem", "Clinica cadastrada com sucesso!");
                 request.getRequestDispatcher("paginaDeResposta.jsp").forward(request, response);

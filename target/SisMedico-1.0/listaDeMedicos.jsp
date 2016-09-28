@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<jsp:useBean id="lista" class="br.edu.ifpb.padroes.projeto.modelo.ListarMedicosBo"/>
+<jsp:useBean id="listaMedico" class="br.edu.ifpb.padroes.projeto.modelo.ListarBo" scope="page"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,21 +28,18 @@
                 <div class="form-group col-md-12">
                     <table class="table table-striped">
                         <tr class="row">
-                                <td>CPF</td>
-                                <td>MATRÍCULA</td>
-                                <td>NOME</td>
-                                <td>RG</td>
-                                <td>DATA DE NASC</td>
-                                <td>EMAIL</td>
-                                <td>CRM</td>
-                                <td>ESPECIALIDADE</td>
-                                <td>UF</td>
-                                <td>CIDADE</td>
-                                <td>BAIRRO</td>
-                                <td>RUA</td>
-                                <td>NÚMERO</td>
-                            </tr>
-                        <c:forEach var="medico" items="${lista.listar()}">
+                            <td>CPF</td>
+                            <td>MATRÍCULA</td>
+                            <td>NOME</td>
+                            <td>RG</td>
+                            <td>DATA DE NASC</td>
+                            <td>EMAIL</td>
+                            <td>CRM</td>
+                            <td>ESPECIALIDADE</td>
+                            <td>DETALHAR</td>
+                            <td>REMOVER</td>
+                        </tr>
+                        <c:forEach var="medico" items="${listaMedico.listarMedico()}">
                             <tr class="row">
                                 <td>${medico.cpf}</td>
                                 <td>${medico.matricula}</td>
@@ -52,13 +49,11 @@
                                 <td>${medico.email}</td>
                                 <td>${medico.crm}</td>
                                 <td>${medico.especialidade}</td>
-                                <td>${medico.endereco.estado}</td>
-                                <td>${medico.endereco.cidade}</td>
-                                <td>${medico.endereco.bairro}</td>
-                                <td>${medico.endereco.rua}</td>
-                                <td>${medico.endereco.numero}</td>
                                 <td>
-                                    <a href="Controller?command=RemoverMedico&cpf=${medico.cpf}">Remover</a>
+                                    <a class="btn btn-primary btn-block" href="Controller?command=ExibirMedico&cpf=${medico.cpf}">Detalhar</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger btn-block" href="Controller?command=RemoverMedico&cpf=${medico.cpf}">Remover</a>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -13,6 +13,9 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <script src='http://code.jquery.com/jquery-2.1.3.min.js'></script>
         <script src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js'></script>
+        <script src="js/jquery.maskedinput.min.js" type="text/javascript"></script>
+        <script src="js/funcoes.js"></script>
+        <script src="js/jquery.min.js"></script>
         <title>JSP Page</title>
     </head>
     <body>
@@ -78,7 +81,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="numero">Número: </label>
-                        <input type="text" class="form-control" name="numero" id="numero" min="1" required>
+                        <input type="text" class="form-control" name="numero" id="numero" required>
                     </div>
                     <div class="form-group col-md-8">
                         <label for="email">Email: </label>

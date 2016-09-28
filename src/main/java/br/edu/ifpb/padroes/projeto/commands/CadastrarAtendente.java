@@ -3,7 +3,7 @@ package br.edu.ifpb.padroes.projeto.commands;
 
 import br.edu.ifpb.padroes.projeto.entidades.Endereco;
 import br.edu.ifpb.padroes.projeto.entidades.Funcionario;
-import br.edu.ifpb.padroes.projeto.modelo.CadastrarAtendenteBo;
+import br.edu.ifpb.padroes.projeto.modelo.CadastrarBo;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -24,14 +23,10 @@ public class CadastrarAtendente implements Command{
     
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) {
-        response.setContentType("text/html;charset=UTF-8");
-        HttpSession sessao = request.getSession();
         Funcionario funcionario = dadosDoAtendente(request);
-        CadastrarAtendenteBo cadastro = new CadastrarAtendenteBo();
-        cadastro.cadastrar(funcionario);
+        CadastrarBo cadastro = new CadastrarBo();
         request.setAttribute("pagina", "cadastroAtendente.jsp");
-        if (funcionario == null) {
-            sessao.invalidate();
+        if (!cadastro.cadastrarAtendente(funcionario)) {
             try {
                 request.setAttribute("mensagem", "Erro ao cadastrar atendente!");
                 request.getRequestDispatcher("paginaDeResposta.jsp").forward(request, response);
@@ -39,7 +34,6 @@ public class CadastrarAtendente implements Command{
                 Logger.getLogger(CadastrarAtendente.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            sessao.setAttribute("funcionario", funcionario);
             try {
                 request.setAttribute("mensagem", "Atendente cadastrado com sucesso!");
                 request.getRequestDispatcher("paginaDeResposta.jsp").forward(request, response);

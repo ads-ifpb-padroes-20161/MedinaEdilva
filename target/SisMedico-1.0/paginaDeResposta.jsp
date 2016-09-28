@@ -17,7 +17,7 @@
             <div class="container text-center">
                 <h3>${mensagem}</h3>
                 <div class="col-md-12 text-center">
-                    <a href="paginaDoAtendente.jsp" class="btn btn-primary">Voltar</a>
+                    <a href="${pagina}" class="btn btn-primary">Voltar</a>
                 </div>
             </div>
         </div>

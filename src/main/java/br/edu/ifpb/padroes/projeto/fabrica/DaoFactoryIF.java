@@ -2,10 +2,10 @@
 package br.edu.ifpb.padroes.projeto.fabrica;
 
 import br.edu.ifpb.padroes.projeto.dao.ClinicaDaoIF;
+import br.edu.ifpb.padroes.projeto.dao.ConsultaDaoIF;
 import br.edu.ifpb.padroes.projeto.dao.FuncionarioDaoIF;
 import br.edu.ifpb.padroes.projeto.dao.MedicoDaoIF;
 import br.edu.ifpb.padroes.projeto.dao.PessoaDaoIF;
-import java.sql.SQLException;
 
 /**
  *
@@ -20,4 +20,6 @@ public interface DaoFactoryIF {
     public MedicoDaoIF criaMedico();
     
     public ClinicaDaoIF criaClinica();
+    
+    public ConsultaDaoIF criaConsulta();
 }

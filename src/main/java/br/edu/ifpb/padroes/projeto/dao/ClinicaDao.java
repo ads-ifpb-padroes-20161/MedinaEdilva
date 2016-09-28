@@ -178,5 +178,30 @@ public class ClinicaDao implements ClinicaDaoIF {
 
         return telefones;
     }
+    
+    @Override
+    public Clinica exibir(String cnpj){
+        Clinica clinica = null;
+        PreparedStatement ps = null;
+        try {
+            conn = new Conexao();
+            String sql = "SELECT * FROM CLINICA WHERE CNPJ = ?";
+            ps = conn.getConnection().prepareStatement(sql);
+            ps.setString(1, cnpj);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                clinica = dadosDaClinica(rs);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ClinicaDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.desconecta(ps);
+            } catch (DataBaseException ex) {
+                Logger.getLogger(ClinicaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return clinica;
+    }
 
 }

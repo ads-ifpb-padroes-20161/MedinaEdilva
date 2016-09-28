@@ -54,11 +54,17 @@
                             <a href="" class="dropdown-toggle" data-toggle="dropdown">Cliníca</a>
                             <ul class="nav dropdown-menu">
                                 <li><a href="cadastroClinica.jsp">Cadastrar Clínica</a></li>
-                                <li><a href="listarClinicas.jsp">Listar Clínicas</a></li>
+                                <li><a href="listaDeClinicas.jsp">Listar Clínicas</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown">Consulta</a>
+                            <ul class="nav dropdown-menu">
+                                <li><a href="listaDeConsultas.jsp">Listar Consultas</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a >Sair</a>
+                            <a href="Controller?command=Sair">Sair</a>
                         </li>
                     </ul>
                 </div><!-- /.navbar-collapse -->

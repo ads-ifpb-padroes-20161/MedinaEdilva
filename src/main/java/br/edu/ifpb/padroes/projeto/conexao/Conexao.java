@@ -40,7 +40,7 @@ public class Conexao implements ConexaoIF{
             ps.close();
             this.conn.close();
         } catch (SQLException ex) {
-            throw new DataBaseException("Falha ao fechar conex�es: " + ex.getMessage());
+            throw new DataBaseException("Falha ao fechar conexões: " + ex.getMessage());
         }
     }
     
@@ -50,7 +50,7 @@ public class Conexao implements ConexaoIF{
             st.close();
             this.conn.close();
         } catch (SQLException ex) {
-            throw new DataBaseException("Falha ao fechar conex�es: " + ex.getMessage());
+            throw new DataBaseException("Falha ao fechar conexões: " + ex.getMessage());
         }
     }
     

@@ -39,6 +39,6 @@ public class Medico extends Funcionario{
 
     @Override
     public String toString() {
-        return "Medico{" + "crm=" + crm + ", especialidade=" + especialidade + '}';
+        return "Medico{" + super.toString() + "crm=" + crm + ", especialidade=" + especialidade + '}';
     }
 }

@@ -86,7 +86,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="numero">Número: </label>
-                        <input type="text" class="form-control" name="numero" id="numero" min="1" required>
+                        <input type="text" class="form-control" name="numero" id="numero" required>
                     </div>
                     <div class="form-group col-md-8">
                         <label for="email">Email: </label>

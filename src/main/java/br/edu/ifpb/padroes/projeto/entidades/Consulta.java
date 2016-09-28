@@ -9,26 +9,30 @@ import java.time.LocalTime;
  * @author Edilva
  */
 public class Consulta {
-    private int codCounsulta;
-    private String tipoConsulta;
+    private int id;
     private LocalDate data;
     private LocalTime hora;
-    private String convenio;
     private double valor;
-    private String retorno;
     private StatusConsulta status;
     private Pessoa paciente;
     private Medico medico;
     private Funcionario atendente;
 
-    public Consulta(int codCounsulta, String tipoConsulta, LocalDate data, LocalTime hora, String convenio, double valor, String retorno, StatusConsulta status, Pessoa paciente, Medico medico, Funcionario atendente) {
-        this.codCounsulta = codCounsulta;
-        this.tipoConsulta = tipoConsulta;
+    public Consulta(int id, LocalDate data, LocalTime hora, double valor, StatusConsulta status, Pessoa paciente, Medico medico, Funcionario atendente) {
+        this.id = id;
         this.data = data;
         this.hora = hora;
-        this.convenio = convenio;
         this.valor = valor;
-        this.retorno = retorno;
+        this.status = status;
+        this.paciente = paciente;
+        this.medico = medico;
+        this.atendente = atendente;
+    }
+
+    public Consulta(LocalDate data, LocalTime hora, double valor, StatusConsulta status, Pessoa paciente, Medico medico, Funcionario atendente) {
+        this.data = data;
+        this.hora = hora;
+        this.valor = valor;
         this.status = status;
         this.paciente = paciente;
         this.medico = medico;
@@ -38,20 +42,12 @@ public class Consulta {
     public Consulta() {
     }
 
-    public int getCodCounsulta() {
-        return codCounsulta;
+    public int getId() {
+        return id;
     }
 
-    public void setCodCounsulta(int codCounsulta) {
-        this.codCounsulta = codCounsulta;
-    }
-
-    public String getTipoConsulta() {
-        return tipoConsulta;
-    }
-
-    public void setTipoConsulta(String tipoConsulta) {
-        this.tipoConsulta = tipoConsulta;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getData() {
@@ -70,28 +66,12 @@ public class Consulta {
         this.hora = hora;
     }
 
-    public String getConvenio() {
-        return convenio;
-    }
-
-    public void setConvenio(String convenio) {
-        this.convenio = convenio;
-    }
-
     public double getValor() {
         return valor;
     }
 
     public void setValor(double valor) {
         this.valor = valor;
-    }
-
-    public String getRetorno() {
-        return retorno;
-    }
-
-    public void setRetorno(String retorno) {
-        this.retorno = retorno;
     }
 
     public StatusConsulta getStatus() {
@@ -128,6 +108,6 @@ public class Consulta {
 
     @Override
     public String toString() {
-        return "Consulta{" + "codCounsulta=" + codCounsulta + ", tipoConsulta=" + tipoConsulta + ", data=" + data + ", hora=" + hora + ", convenio=" + convenio + ", valor=" + valor + ", retorno=" + retorno + ", status=" + status + ", paciente=" + paciente + ", medico=" + medico + ", atendente=" + atendente + '}';
+        return "Consulta{" + "id=" + id + ", data=" + data + ", hora=" + hora + ", valor=" + valor + ", status=" + status + ", paciente=" + paciente + ", medico=" + medico + ", atendente=" + atendente + '}';
     }
 }

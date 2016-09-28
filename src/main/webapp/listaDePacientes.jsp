@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<jsp:useBean id="lista" class="br.edu.ifpb.padroes.projeto.modelo.ListarPacientesBo"/>
+<jsp:useBean id="listaPaciente" class="br.edu.ifpb.padroes.projeto.modelo.ListarBo" scope="page"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -38,8 +38,11 @@
                             <td>BAIRRO</td>
                             <td>RUA</td>
                             <td>NÚMERO</td>
+                            <td>DETALHAR</td>
+                            <td>REMOVER</td>
+                            <td>AGENDAR CONSULTA</td>
                         </tr>
-                        <c:forEach var="paciente" items="${lista.listar()}">
+                        <c:forEach var="paciente" items="${listaPaciente.listarPaciente()}">
                             <tr class="row">
                                 <td>${paciente.cpf}</td>
                                 <td>${paciente.nome}</td>
@@ -52,7 +55,13 @@
                                 <td>${paciente.endereco.rua}</td>
                                 <td>${paciente.endereco.numero}</td>
                                 <td>
-                                    <a href="Controller?command=RemoverPaciente&cpf=${paciente.cpf}">Remover</a>
+                                    <a class="btn btn-primary btn-block" href="Controller?command=ExibirPaciente&cpf=${paciente.cpf}">Detalhar</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger btn-block" href="Controller?command=RemoverPaciente&cpf=${paciente.cpf}">Remover</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-success btn-block" href="Controller?command=PegaPaciente&cpf=${paciente.cpf}">Agendar</a>
                                 </td>
                             </tr>
                         </c:forEach>

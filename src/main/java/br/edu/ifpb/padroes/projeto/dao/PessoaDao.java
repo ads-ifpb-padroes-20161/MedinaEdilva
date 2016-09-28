@@ -6,7 +6,6 @@ import br.edu.ifpb.padroes.projeto.conexao.DataBaseException;
 import br.edu.ifpb.padroes.projeto.entidades.Endereco;
 import br.edu.ifpb.padroes.projeto.entidades.Pessoa;
 import br.edu.ifpb.padroes.projeto.entidades.TipoPessoa;
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,20 +36,20 @@ public class PessoaDao implements PessoaDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "INSERT INTO PESSOA (CPF, NOME, RG, DATA_NASC, EMAIL, TIPO, "
-                    + "UF, CIDADE, BAIRRO, RUA, NUMERO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            conn.getConnection();
+            String sql = "INSERT INTO PESSOA (CPF, NOME, RG, DATA_NASC, EMAIL, "
+                    + "UF, CIDADE, BAIRRO, RUA, NUMERO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, pessoa.getCpf());
             ps.setString(2, pessoa.getNome());
             ps.setString(3, pessoa.getRg());
             ps.setDate(4, Date.valueOf(pessoa.getDataNasc()));
             ps.setString(5, pessoa.getEmail());
-            ps.setString(6, String.valueOf(TipoPessoa.PACIENTE));
-            ps.setString(7, pessoa.getEndereco().getEstado());
-            ps.setString(8, pessoa.getEndereco().getCidade());
-            ps.setString(9, pessoa.getEndereco().getBairro());
-            ps.setString(10, pessoa.getEndereco().getRua());
-            ps.setString(11, pessoa.getEndereco().getNumero());
+            ps.setString(6, pessoa.getEndereco().getEstado());
+            ps.setString(7, pessoa.getEndereco().getCidade());
+            ps.setString(8, pessoa.getEndereco().getBairro());
+            ps.setString(9, pessoa.getEndereco().getRua());
+            ps.setString(10, pessoa.getEndereco().getNumero());
 
             if (ps.executeUpdate() > 0) {
                 adicionaTelefone(pessoa, ps);
@@ -130,7 +129,9 @@ public class PessoaDao implements PessoaDaoIF {
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
-            pessoa = dadosDaPessoa(rs);
+            if (rs.next()) {
+                pessoa = dadosDaPessoa(rs);
+            }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(PessoaDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -150,7 +151,7 @@ public class PessoaDao implements PessoaDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "SELECT * FROM PESSOA WHERE TIPO = 'PACIENTE'";
+            String sql = "SELECT * FROM PESSOA";
             ps = conn.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -180,7 +181,7 @@ public class PessoaDao implements PessoaDaoIF {
         String cidade = rs.getString("CIDADE");
         String bairro = rs.getString("BAIRRO");
         String rua = rs.getString("RUA");
-        String numero = rs.getString("NUMERO");
+        String numero = rs.getString("NUMERO");   
 
         Endereco endereco = new Endereco(estado, cidade, bairro, rua, numero);
         List<String> telefones = telefonesDaPessoa(cpf);

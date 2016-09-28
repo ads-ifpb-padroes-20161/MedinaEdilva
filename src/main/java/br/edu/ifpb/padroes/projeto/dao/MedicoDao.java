@@ -37,41 +37,29 @@ public class MedicoDao implements MedicoDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "INSERT INTO PESSOA (CPF, NOME, RG, DATA_NASC, EMAIL, TIPO, "
-                    + "UF, CIDADE, BAIRRO, RUA, NUMERO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO MEDICO (CPF, NOME, RG, DATA_NASC, EMAIL, "
+                    + "UF, CIDADE, BAIRRO, RUA, NUMERO, MATRICULA, SENHA, CNPJ_CLINICA, CRM, ESPECIALIDADE) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, medico.getCpf());
             ps.setString(2, medico.getNome());
             ps.setString(3, medico.getRg());
             ps.setDate(4, Date.valueOf(medico.getDataNasc()));
             ps.setString(5, medico.getEmail());
-            ps.setString(6, String.valueOf(TipoPessoa.MEDICO));
-            ps.setString(7, medico.getEndereco().getEstado());
-            ps.setString(8, medico.getEndereco().getCidade());
-            ps.setString(9, medico.getEndereco().getBairro());
-            ps.setString(10, medico.getEndereco().getRua());
-            ps.setString(11, medico.getEndereco().getNumero());
+            ps.setString(6, medico.getEndereco().getEstado());
+            ps.setString(7, medico.getEndereco().getCidade());
+            ps.setString(8, medico.getEndereco().getBairro());
+            ps.setString(9, medico.getEndereco().getRua());
+            ps.setString(10, medico.getEndereco().getNumero());
+            ps.setString(11, medico.getMatricula());
+            ps.setString(12, medico.getSenha());
+            ps.setString(13, medico.getCnpjClinica());
+            ps.setString(14, medico.getCrm());
+            ps.setString(15, medico.getEspecialidade());
 
             if (ps.executeUpdate() > 0) {
-                String sql2 = "INSERT INTO FUNCIONARIO (CPF_FUNCIONARIO, MATRICULA, SENHA, CNPJ_CLINICA) VALUES (?, ?, ?, ?)";
-                ps = conn.getConnection().prepareStatement(sql2);
-                ps.setString(1, medico.getCpf());
-                ps.setString(2, medico.getMatricula());
-                ps.setString(3, medico.getSenha());
-                ps.setString(4, medico.getCnpjClinica());
-
-                if (ps.executeUpdate() > 0) {
-                    String sql3 = "INSERT INTO MEDICO (CPF_MEDICO, CRM, ESPECIALIDADE) VALUES (?, ?, ?)";
-                    ps = conn.getConnection().prepareStatement(sql3);
-                    ps.setString(1, medico.getCpf());
-                    ps.setString(2, medico.getCrm());
-                    ps.setString(3, medico.getEspecialidade());
-
-                    if (ps.executeUpdate() > 0) {
-                        adicionaTelefone(medico, ps);
-                        result = true;
-                    }
-                }
+                adicionaTelefone(medico, ps);
+                result = true;
             }
 
         } catch (SQLException ex) {
@@ -92,7 +80,7 @@ public class MedicoDao implements MedicoDaoIF {
     private void adicionaTelefone(Medico medico, PreparedStatement ps) {
 
         try {
-            String sql2 = "INSERT INTO TELEFONE_PESSOA (CPF_PESSOA, TELEFONE) VALUES (?, ?)";
+            String sql2 = "INSERT INTO TELEFONE_MEDICO (CPF_MEDICO, TELEFONE) VALUES (?, ?)";
             ps = conn.getConnection().prepareStatement(sql2);
             for (String tel : medico.getTelefones()) {
                 ps.setString(1, medico.getCpf());
@@ -118,7 +106,7 @@ public class MedicoDao implements MedicoDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "DELETE FROM MEDICO WHERE CPF_MEDICO = ?";
+            String sql = "DELETE FROM MEDICO WHERE CPF = ?";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, cpf);
 
@@ -148,11 +136,13 @@ public class MedicoDao implements MedicoDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "SELECT * FROM ((FUNCIONARIO F JOIN PESSOA P ON F.CPF_FUNCIONARIO=P.CPF) JOIN MEDICO M ON M.CPF_MEDICO=P.CPF) WHERE P.CPF = ?";
+            String sql = "SELECT * FROM MEDICO WHERE CPF = ?";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
-            medico = dadosDoMedico(rs);
+            if (rs.next()) {
+                medico = dadosDoMedico(rs);
+            }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(MedicoDao.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -173,7 +163,7 @@ public class MedicoDao implements MedicoDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "SELECT * FROM ((FUNCIONARIO F JOIN PESSOA P ON F.CPF_FUNCIONARIO=P.CPF) JOIN MEDICO M ON M.CPF_MEDICO=P.CPF) WHERE TIPO = 'MEDICO'";
+            String sql = "SELECT * FROM  MEDICO";
             ps = conn.getConnection().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -195,7 +185,31 @@ public class MedicoDao implements MedicoDaoIF {
 
     @Override
     public Medico login(String matricula, String senha) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        PreparedStatement ps = null;
+        Medico medico = null;
+
+        try {
+            conn = new Conexao();
+
+            String sql = "SELECT * FROM MEDICO WHERE MATRICULA = ? AND SENHA = ?";
+            ps = conn.getConnection().prepareStatement(sql);
+            ps.setString(1, matricula);
+            ps.setString(2, senha);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                medico = dadosDoMedico(rs);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(MedicoDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.desconecta(ps);
+            } catch (DataBaseException ex) {
+                Logger.getLogger(MedicoDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return medico;
     }
 
     private Medico dadosDoMedico(ResultSet rs) throws SQLException {
@@ -228,7 +242,7 @@ public class MedicoDao implements MedicoDaoIF {
 
         try {
             conn = new Conexao();
-            String sql = "SELECT * FROM TELEFONE_PESSOA WHERE CPF_PESSOA = ?";
+            String sql = "SELECT * FROM TELEFONE_MEDICO WHERE CPF_MEDICO = ?";
             ps = conn.getConnection().prepareStatement(sql);
             ps.setString(1, cpf);
             ResultSet rs = ps.executeQuery();
